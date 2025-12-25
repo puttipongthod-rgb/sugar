@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>NIR Glucose Prototype</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+  font-family: Arial;
+  background:#f2f2f2;
+  text-align:center;
+}
+.box {
+  background:white;
+  padding:15px;
+  margin:15px auto;
+  width:80%;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>ระบบวัดน้ำตาลด้วยแสง NIR (ต้นแบบ)</h2>
+</div>
+
+<div class="box">
+  <h3>ค่าที่วัดได้</h3>
+  <p>ADC Value: <span id="adc">---</span></p>
+  <p>Estimated Glucose (mg/dL): <span id="glucose">---</span></p>
+  <button onclick="simulate()">จำลองค่า</button>
+</div>
+
+<div class="box">
+  <canvas id="chart"></canvas>
+</div>
+
+<script>
+let data = [];
+
+const ctx = document.getElementById('chart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+      label: 'NIR Signal',
+      data: [],
+      borderWidth: 2
+    }]
+  }
+});
+
+function simulate() {
+  let adc = Math.floor(2000 + Math.random()*500);
+  let glucose = Math.floor(adc / 20);
+
+  document.getElementById("adc").innerText = adc;
+  document.getElementById("glucose").innerText = glucose;
+
+  data.push(adc);
+  chart.data.labels.push(data.length);
+  chart.data.datasets[0].data.push(adc);
+  chart.update();
+}
+</script>
+
+</body>
+</html>
